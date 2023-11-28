@@ -1,10 +1,10 @@
 # Computer Networking Project 02 - Group #18
 
 ### General Info
-A [university](https://fiek.uni-pr.edu) team project organised by Computer Networking Subject.  
+A [university](https://fiek.uni-pr.edu) team project organized by Computer Networking Subject.  
 
 ## What's the project about?
-The project is about creating a programme that allows the communication between a Server and its Clients using sockets.
+The project is about creating a program that allows the communication between a Server and its Clients using sockets.
 
 ### Technologies 
 The implementation of the program was made using NodeJS.
