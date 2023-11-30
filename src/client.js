@@ -50,4 +50,13 @@ client.on('message', (message, info) => {
         }, 3000);
       }
     });
+  } 
+  function sendDisconnection(packet) {
+    client.send(packet, port, hostname, (err) => {
+      if (err) {
+        console.error('Failed to send disconnection packet!!');
+      } else {
+        console.log('Disconnection packet sent!!');
+      }
+    });
   }
