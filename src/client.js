@@ -37,3 +37,17 @@ client.on('message', (message, info) => {
   }
   
   searchPrompt();
+
+  function sendMessage(packet) {
+    client.send(packet, port, hostname, (err) => {
+      if (err) {
+        console.error('Failed to send packet!!');
+      } else {
+        console.log('Packet sent!!');
+  
+        setTimeout(() => {
+          searchPrompt();
+        }, 3000);
+      }
+    });
+  }
