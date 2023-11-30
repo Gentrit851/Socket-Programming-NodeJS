@@ -24,7 +24,10 @@ server.on('message', (message, remote) => {
     readFile(fileName, remote);
   } else if (command.toLowerCase() === 'writefile') {
     writeFile(fileName, fileContent, remote);
+  }else if (command.toLowerCase() === 'runfile') {
+    runFile(fileName, remote);
   }
+
 
   else {
     const existingClient = clients.find(client => client.address === remote.address && client.port === remote.port);
