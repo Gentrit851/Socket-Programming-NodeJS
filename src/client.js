@@ -1,4 +1,5 @@
 const UDP = require('dgram')
+const { readFile } = require('fs')
 
 const client = UDP.createSocket('udp4')
 
@@ -12,12 +13,27 @@ client.on('message', (message, info) => {
     console.log('Message from server', message.toString())
   })
   
-  const packet = Buffer.from('This is a message from client')
+ const readline = require('readline')
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
   
-  client.send(packet, port, hostname, (err) => {
-    if (err) {
-      console.error('Failed to send packet !!')
-    } else {
-      console.log('Packet send !!')
-    }
-  })
+  });
+  function searchPrompt(){
+    r1.question('Send to server : ',(answer) => {
+      const packet = Buffer.from(answer)
+      if(answer.toLowerCase() !== "stop" && answer.length !== 0){
+        sendMessage(packet);
+      }else{
+        console.log("Connection has been stoped by the 'stop' command !");
+        sendDiconnection(packet);
+
+        setTimeout(() => {
+          rl.close();
+          client.close();
+        },3000);
+      }
+    });
+  }
+  
+  searchPrompt();
