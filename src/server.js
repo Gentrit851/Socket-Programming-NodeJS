@@ -22,6 +22,8 @@ server.on('message', (message, remote) => {
     }
   } else if (command.toLowerCase() === 'readfile') {
     readFile(fileName, remote);
+  } else if (command.toLowerCase() === 'writefile') {
+    writeFile(fileName, fileContent, remote);
   }
 
   else {
@@ -51,6 +53,24 @@ function readFile(fileName, remote) {
     }
   });
 }
+
+function writeFile(fileName, fileContent, remote) {
+  fs.writeFile(fileName, fileContent, 'utf8', (err) => {
+    if (err) {
+      console.error(`Error writing to file: ${err.message}`);
+    } else {
+      const responseMessage = `File ${fileName} successfully updated.`;
+      server.send(Buffer.from(responseMessage), remote.port, remote.address, (err) => {
+        if (err) {
+          console.error(`Error sending success response to ${remote.address}:${remote.port}: ${err.message}`);
+        } else {
+          console.log(`File ${fileName} successfully updated for ${remote.address}:${remote.port}`);
+        }
+      });
+    }
+  });
+}
+
 
 server.on('listening', () => {
   const address = server.address()
