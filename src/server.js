@@ -10,7 +10,7 @@ server.on('message', (message, remote) => {
   const messageString = message.toString();
   console.log(`Received message from ${remote.address}:${remote.port}: ${messageString}`);
 
-  const [command, fileName] = messageString.split('|');
+  const [command, fileName, fileContent] = messageString.split('|');
 
   if (command.toLowerCase() === 'stop') {
 
