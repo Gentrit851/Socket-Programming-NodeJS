@@ -26,7 +26,7 @@ client.on('message', (message, info) => {
         sendMessage(packet);
       }else{
         console.log("Connection has been stoped by the 'stop' command !");
-        sendDiconnection(packet);
+        sendDisconnection(packet);
 
         setTimeout(() => {
           rl.close();
