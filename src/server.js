@@ -10,6 +10,8 @@ server.on('message', (message, remote) => {
   const messageString = message.toString();
   console.log(`Received message from ${remote.address}:${remote.port}: ${messageString}`);
 
+  const [command, fileName] = messageString.split('|');
+
   if (command.toLowerCase() === 'stop') {
 
     const index = clients.findIndex(client => client.address === remote.address && client.port === remote.port);
@@ -18,6 +20,8 @@ server.on('message', (message, remote) => {
       console.log(`Client ${remote.address}:${remote.port} has disconnected.`);
       console.log(clients);
     }
+  } else if (command.toLowerCase() === 'readfile') {
+    readFile(fileName, remote);
   }
 
   else {
@@ -30,6 +34,23 @@ server.on('message', (message, remote) => {
     }
   }
 });
+
+function readFile(fileName, remote) {
+  fs.readFile(fileName, 'utf8', (err, data) => {
+    if (err) {
+      console.error(`Error reading file: ${err.message}`);
+    } else {
+      const responseMessage = `File content:\n${data}`;
+      server.send(Buffer.from(responseMessage), remote.port, remote.address, (err) => {
+        if (err) {
+          console.error(`Error sending file content to ${remote.address}:${remote.port}: ${err.message}`);
+        } else {
+          console.log(`File content sent to ${remote.address}:${remote.port}`);
+        }
+      });
+    }
+  });
+}
 
 server.on('listening', () => {
   const address = server.address()
