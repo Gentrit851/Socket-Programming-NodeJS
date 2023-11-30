@@ -60,3 +60,8 @@ client.on('message', (message, info) => {
       }
     });
   }
+  client.on('message', (message, remote) => {
+    const messageString = message.toString();
+    console.log(`Received message from ${remote.address}:${remote.port}: ` + `\n` + `${messageString}`);
+    searchPrompt();
+  });
