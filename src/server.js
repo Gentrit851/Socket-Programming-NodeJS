@@ -62,6 +62,18 @@ function performAction(fileName, fileContent, remote, action) {
   }
 }
 
+function listFiles(remote) {
+  fs.readdir('./serverfiles', (err, files) => {
+    if (err) {
+      console.error(`Error reading directory: ${err.message}`);
+    } else {
+      const fileList = files.join('\n');
+      const responseMessage = `Files you can read:\n${fileList}`;
+      sendResponseMessage(responseMessage, remote);
+    }
+  });
+}
+
 function readFile(fileName, remote) {
   const filePath = path.join(__dirname, 'serverfiles', fileName);
   fs.readFile(filePath, 'utf8', (err, data) => {
