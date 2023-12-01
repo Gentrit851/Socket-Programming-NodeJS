@@ -16,7 +16,7 @@ const rl = readline.createInterface({
 });
 
 function searchPrompt() {
-  r1.question('Send to server : ', (answer) => {
+  rl.question('Send to server : ', (answer) => {
     const packet = Buffer.from(answer)
     if (answer.toLowerCase() !== "stop" && answer.length !== 0) {
       sendMessage(packet);
