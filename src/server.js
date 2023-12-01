@@ -74,21 +74,17 @@ function readFile(fileName, remote) {
 
 
 function writeFile(fileName, fileContent, remote) {
-  fs.writeFile(fileName, fileContent, 'utf8', (err) => {
+  const filePath = path.join(__dirname, 'serverfiles', fileName);
+  fs.writeFile(filePath, fileContent || '', 'utf8', (err) => {
     if (err) {
-      console.error(`Error writing to file: ${err.message}`);
+      ENOENTerror("writing",err,fileName,remote);
     } else {
       const responseMessage = `File ${fileName} successfully updated.`;
-      server.send(Buffer.from(responseMessage), remote.port, remote.address, (err) => {
-        if (err) {
-          console.error(`Error sending success response to ${remote.address}:${remote.port}: ${err.message}`);
-        } else {
-          console.log(`File ${fileName} successfully updated for ${remote.address}:${remote.port}`);
-        }
-      });
+      sendResponseMessage(responseMessage, remote);
     }
   });
 }
+
 
 function runFile(fileName, remote) {
   exec(`${fileName}`, (error, stdout) => {
