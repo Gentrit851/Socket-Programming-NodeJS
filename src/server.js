@@ -46,6 +46,20 @@ server.on('message', (message, remote) => {
   }
 });
 
+function performAction(fileName, fileContent, remote, action) {
+  const permissions = clientPermissionsMap.get(`${remote.address}:${remote.port}`);
+  if (permissions && permissions.write && permissions.execute) {
+    if (action === `write`) {
+      writeFile(fileName, fileContent, remote);
+    }
+    else if (action === 'execute') {
+      runFile(fileName, remote);
+    }
+  } else {
+    sendPermissionDenied(remote, fileName, action);
+  }
+}
+
 function readFile(fileName, remote) {
   const filePath = path.join(__dirname, 'serverfiles', fileName);
   fs.readFile(filePath, 'utf8', (err, data) => {
