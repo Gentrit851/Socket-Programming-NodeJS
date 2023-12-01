@@ -101,21 +101,19 @@ function writeFile(fileName, fileContent, remote) {
 
 
 function runFile(fileName, remote) {
-  exec(`${fileName}`, (error, stdout) => {
-    if (error) {
-      console.error(`Error running file ${fileName}: ${error.message}`);
-    } else {
-      const responseMessage = `File ${fileName} executed:\n${stdout}`;
-      server.send(Buffer.from(responseMessage), remote.port, remote.address, (err) => {
-        if (err) {
-          console.error(`Error sending response to ${remote.address}:${remote.port}: ${err.message}`);
-        } else {
-          console.log(`File ${fileName} executed for ${remote.address}:${remote.port}`);
-        }
-      });
+  const filePath = path.join(__dirname, 'serverfiles', fileName);
+  fs.access(filePath, fs.constants.X_OK, (err) => {
+    if (err) {
+      ENOENTerror("running",err,fileName,remote)
+    } else if (fileName.endsWith('.js')) {
+      executeFile(`node "${filePath}"`, fileName, remote);
+    }
+    else {
+      executeFile(`"${filePath}"`, fileName, remote);
     }
   });
 }
+
 
 
 server.on('listening', () => {
