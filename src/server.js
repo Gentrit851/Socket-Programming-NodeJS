@@ -47,21 +47,17 @@ server.on('message', (message, remote) => {
 });
 
 function readFile(fileName, remote) {
-  fs.readFile(fileName, 'utf8', (err, data) => {
+  const filePath = path.join(__dirname, 'serverfiles', fileName);
+  fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
-      console.error(`Error reading file: ${err.message}`);
+      ENOENTerror("reading",err,fileName,remote);
     } else {
       const responseMessage = `File content:\n${data}`;
-      server.send(Buffer.from(responseMessage), remote.port, remote.address, (err) => {
-        if (err) {
-          console.error(`Error sending file content to ${remote.address}:${remote.port}: ${err.message}`);
-        } else {
-          console.log(`File content sent to ${remote.address}:${remote.port}`);
-        }
-      });
+      sendResponseMessage(responseMessage, remote);
     }
   });
 }
+
 
 function writeFile(fileName, fileContent, remote) {
   fs.writeFile(fileName, fileContent, 'utf8', (err) => {
