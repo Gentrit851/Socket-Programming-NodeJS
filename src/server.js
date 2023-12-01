@@ -8,7 +8,7 @@ const server = UDP.createSocket('udp4')
 
 const port = 2222
 
-const path = require('path')
+const path = require('path');
 
 const clientPermissionsMap = new Map();
 
