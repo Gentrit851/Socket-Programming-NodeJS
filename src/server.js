@@ -8,7 +8,7 @@ const server = UDP.createSocket('udp4')
 
 const port = 2222
 
-const clients = [];
+const clientPermissionsMap = new Map();
 
 server.on('message', (message, remote) => {
   const messageString = message.toString();
@@ -16,29 +16,33 @@ server.on('message', (message, remote) => {
 
   const [command, fileName, fileContent] = messageString.split('|');
 
-  if (command.toLowerCase() === 'stop') {
-    const index = clients.findIndex(client => client.address === remote.address && client.port === remote.port);
-      if (index !== -1) {
-         clients.splice(index, 1);
-         console.log(`Client ${remote.address}:${remote.port} has disconnected.`);
-         console.log(clients);
-       }
-  } else if (command.toLowerCase() === 'readfile') {
-    readFile(fileName, remote);
-  } else if (command.toLowerCase() === 'writefile') {
-    writeFile(fileName, fileContent, remote);
-  } else if (command.toLowerCase() === 'runfile') {
-    runFile(fileName, remote);
-  }
+  switch (command.toLowerCase()) {
+    case 'stop':
+      stop(remote);
+      break;
 
-  else {
-    const existingClient = clients.find(client => client.address === remote.address && client.port === remote.port);
+    case 'readfile':
+      readFile(fileName, remote);
+      break;
 
-    if (!existingClient) {
-      clients.push({ address: remote.address, port: remote.port });
-      console.log(`New client connected: ${remote.address}:${remote.port}`);
-      console.log(clients);
-    }
+    case 'writefile':
+      performAction(fileName, fileContent, remote, 'write');
+      break;
+
+    case 'runfile':
+      performAction(fileName, fileContent, remote, 'execute');
+      break;
+
+    case 'listfiles':
+      listFiles(remote);
+      break;
+
+    default:
+      const existingClient = clientPermissionsMap.get(client => client.address === remote.address && client.port === remote.port);
+      if (!existingClient) {
+        setPermissions(remote);
+      }
+      break;
   }
 });
 
