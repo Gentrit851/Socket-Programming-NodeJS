@@ -114,6 +114,16 @@ function runFile(fileName, remote) {
   });
 }
 
+function executeFile(path, filename, remote) {
+  exec(path, (error, stdout) => {
+    if (error) {
+      console.error(`Error running file ${filename}: ${error.message}`);
+    } else {
+      const responseMessage = `File ${filename} executed:\n${stdout}`;
+      sendResponseMessage(responseMessage, remote);
+    }
+  });
+}
 
 
 server.on('listening', () => {
