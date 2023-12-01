@@ -1,5 +1,9 @@
 const UDP = require('dgram')
 
+const fs = require('fs');
+
+const { exec } = require('child_process');
+
 const server = UDP.createSocket('udp4')
 
 const port = 2222
@@ -13,21 +17,19 @@ server.on('message', (message, remote) => {
   const [command, fileName, fileContent] = messageString.split('|');
 
   if (command.toLowerCase() === 'stop') {
-
     const index = clients.findIndex(client => client.address === remote.address && client.port === remote.port);
-    if (index !== -1) {
-      clients.splice(index, 1);
-      console.log(`Client ${remote.address}:${remote.port} has disconnected.`);
-      console.log(clients);
-    }
+      if (index !== -1) {
+         clients.splice(index, 1);
+         console.log(`Client ${remote.address}:${remote.port} has disconnected.`);
+         console.log(clients);
+       }
   } else if (command.toLowerCase() === 'readfile') {
     readFile(fileName, remote);
   } else if (command.toLowerCase() === 'writefile') {
     writeFile(fileName, fileContent, remote);
-  }else if (command.toLowerCase() === 'runfile') {
+  } else if (command.toLowerCase() === 'runfile') {
     runFile(fileName, remote);
   }
-
 
   else {
     const existingClient = clients.find(client => client.address === remote.address && client.port === remote.port);
