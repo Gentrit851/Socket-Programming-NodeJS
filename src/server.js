@@ -1,16 +1,17 @@
-const UDP = require('dgram')
+const UDP = require('dgram');
 
 const fs = require('fs');
 
 const { exec } = require('child_process');
 
-const server = UDP.createSocket('udp4')
+const server = UDP.createSocket('udp4');
 
-const port = 2222
+const port = 2222;
 
 const path = require('path');
 
 const clientPermissionsMap = new Map();
+
 
 server.on('message', (message, remote) => {
   const messageString = message.toString();
@@ -190,9 +191,8 @@ function sendResponseMessage(responseMessage, remote) {
 
 
 server.on('listening', () => {
-  const address = server.address()
-  console.log('Listining to ', 'Address: ', address.address, 'Port: ', address.port)
-})
+  const address = server.address();
+  console.log(`Server listening on ${address.address}:${address.port}`);
+});
 
-
-server.bind(port)
+server.bind(port, '192.168.0.23');
