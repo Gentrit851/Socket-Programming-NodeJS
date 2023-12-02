@@ -178,6 +178,16 @@ function ENOENTerror(action,err,fileName,remote){
   }
 } 
 
+function sendResponseMessage(responseMessage, remote) {
+  server.send(Buffer.from(responseMessage), remote.port, remote.address, (err) => {
+    if (err) {
+      console.error(`An error occured while sending the response to: ${remote.address}:${remote.port}: ${err.message}`);
+    } else {
+      console.log(`Response sent succesfully to : ${remote.address}:${remote.port}`);
+    }
+  });
+}
+
 
 server.on('listening', () => {
   const address = server.address()
