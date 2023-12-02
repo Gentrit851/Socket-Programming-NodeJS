@@ -1,27 +1,25 @@
-const UDP = require('dgram')
+const UDP = require('dgram');
 
-const readline = require('readline')
+const readline = require('readline');
 
-const client = UDP.createSocket('udp4')
+const client = UDP.createSocket('udp4');
 
-const port = 2222
+const port = 2222;
 
-const hostname = 'localhost'
-
+const hostname = '192.168.0.23';
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
-
 });
 
 function searchPrompt() {
   rl.question('Send to server : ', (answer) => {
-    const packet = Buffer.from(answer)
+    const packet = Buffer.from(answer);
     if (answer.toLowerCase() !== "stop" && answer.length !== 0) {
       sendMessage(packet);
     } else {
-      console.log("Connection has been stoped by the 'stop' command !");
+      console.log("Connection has been closed by the 'stop' command !");
       sendDisconnection(packet);
 
       setTimeout(() => {
@@ -47,6 +45,7 @@ function sendMessage(packet) {
     }
   });
 }
+
 function sendDisconnection(packet) {
   client.send(packet, port, hostname, (err) => {
     if (err) {
