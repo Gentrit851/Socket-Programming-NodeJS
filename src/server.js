@@ -48,6 +48,22 @@ server.on('message', (message, remote) => {
   }
 });
 
+function stop(remote) {
+  const index = clientPermissionsMap.get(client => client.address === remote.address && client.port === remote.port);
+  if (index !== -1) {
+    clientPermissionsMap.delete(`${remote.address}:${remote.port}`);
+    console.log(`Client ${remote.address}:${remote.port} has disconnected.`);
+
+    const [firstKey] = clientPermissionsMap.keys();
+    clientPermissionsMap.set(firstKey, {
+      write: true,
+      execute: true
+    });
+
+    console.log("Now the Map of Clients looks like : ", clientPermissionsMap);
+  }
+}
+
 function performAction(fileName, fileContent, remote, action) {
   const permissions = clientPermissionsMap.get(`${remote.address}:${remote.port}`);
   if (permissions && permissions.write && permissions.execute) {
