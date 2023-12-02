@@ -47,6 +47,18 @@ server.on('message', (message, remote) => {
       break;
   }
 });
+function setPermissions(remote) {
+  const clientPermissions = {
+    write: true,
+    execute: true
+  };
+
+  checkIfFirstClient(clientPermissions);
+
+  clientPermissionsMap.set(`${remote.address}:${remote.port}`, clientPermissions);
+  console.log(`New client connected: ${remote.address}:${remote.port}`);
+  console.log('Map of Clients looks like : ', clientPermissionsMap);
+}
 
 function stop(remote) {
   const index = clientPermissionsMap.get(client => client.address === remote.address && client.port === remote.port);
