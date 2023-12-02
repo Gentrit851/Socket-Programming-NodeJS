@@ -169,6 +169,15 @@ function executeFile(path, filename, remote) {
   });
 }
 
+function ENOENTerror(action,err,fileName,remote){
+  if (err.code === 'ENOENT') {
+    const responseMessage = `File not found: ${fileName}`;
+    sendResponseMessage(responseMessage, remote);
+  } else {
+    console.error(`Error while ${action} the file: ${err.message}`);
+  }
+} 
+
 
 server.on('listening', () => {
   const address = server.address()
