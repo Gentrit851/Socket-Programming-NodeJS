@@ -71,6 +71,21 @@ function checkIfFirstClient(clientPermissions) {
   }
 }
 
+function performAction(fileName, fileContent, remote, action) {
+  const permissions = clientPermissionsMap.get(`${remote.address}:${remote.port}`);
+  if (permissions && permissions.write && permissions.execute) {
+    if (action === `write`) {
+      writeFile(fileName, fileContent, remote);
+    }
+    else if (action === 'execute') {
+      runFile(fileName, remote);
+    }
+  } else {
+    sendPermissionDenied(remote, fileName, action);
+  }
+}
+
+
 function stop(remote) {
   const index = clientPermissionsMap.get(client => client.address === remote.address && client.port === remote.port);
   if (index !== -1) {
