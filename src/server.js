@@ -47,6 +47,7 @@ server.on('message', (message, remote) => {
       break;
   }
 });
+
 function setPermissions(remote) {
   const clientPermissions = {
     write: true,
@@ -58,6 +59,16 @@ function setPermissions(remote) {
   clientPermissionsMap.set(`${remote.address}:${remote.port}`, clientPermissions);
   console.log(`New client connected: ${remote.address}:${remote.port}`);
   console.log('Map of Clients looks like : ', clientPermissionsMap);
+}
+
+function checkIfFirstClient(clientPermissions) {
+  if (clientPermissionsMap.size == 0) {
+    clientPermissions.write = true;
+    clientPermissions.execute = true;
+  } else {
+    clientPermissions.write = false;
+    clientPermissions.execute = false;
+  }
 }
 
 function stop(remote) {
